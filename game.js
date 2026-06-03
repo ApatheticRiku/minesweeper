@@ -240,9 +240,6 @@
     timeLabelEl.textContent = timeAttack ? "TIME LEFT" : "TIME";
     newRecordEl.classList.remove("show");
     newRecordEl.textContent = "";
-
-    // Board footprint may have changed; re-fit the cabinet.
-    requestAnimationFrame(fitToViewport);
   }
 
   function startTimer() {
@@ -477,41 +474,6 @@
     recordTimer = setTimeout(() => newRecordEl.classList.remove("show"), 5000);
   }
 
-  // ----- Viewport scaling --------------------------------------------
-  // The board is fixed-pixel sized (Hard = ~726px wide × ~390px tall).
-  // On small windows the whole cabinet scales down uniformly so nothing
-  // overflows. We never scale UP past 1.0 — the cabinet is content-sized.
-
-  const cabinetEl = document.querySelector(".cabinet");
-  const SCALE_PAD = 16; // breathing room on each edge
-
-  function fitToViewport() {
-    if (!cabinetEl) return;
-
-    // Reset to native size so we measure the true footprint.
-    cabinetEl.style.setProperty("--scale", "1");
-
-    // Allow the browser to settle the layout.
-    const rect = cabinetEl.getBoundingClientRect();
-    const availW = window.innerWidth  - SCALE_PAD * 2;
-    const availH = window.innerHeight - SCALE_PAD * 2;
-
-    if (availW <= 0 || availH <= 0) return;
-
-    const scale = Math.min(1, availW / rect.width, availH / rect.height);
-
-    cabinetEl.style.setProperty("--scale", scale.toFixed(4));
-  }
-
-  let resizeRaf = 0;
-  function scheduleFit() {
-    if (resizeRaf) cancelAnimationFrame(resizeRaf);
-    resizeRaf = requestAnimationFrame(() => {
-      resizeRaf = 0;
-      fitToViewport();
-    });
-  }
-
   // ----- Wire up ------------------------------------------------------
 
   function bindEvents() {
@@ -560,20 +522,8 @@
         newGame();
       }
     });
-
-    // Recompute the viewport scale on resize / orientation change.
-    window.addEventListener("resize", scheduleFit);
-    window.addEventListener("orientationchange", scheduleFit);
-    if (window.ResizeObserver) {
-      // Also fit when the cabinet itself changes size (e.g. font load).
-      new ResizeObserver(scheduleFit).observe(document.documentElement);
-    }
   }
-  // The DOM is now stable at its native size; compute the fit once,
-    // then again on the next frame in case webfonts shifted layout.
-    fitToViewport();
-    requestAnimationFrame(fitToViewport);
-  
+
   // ----- Boot ---------------------------------------------------------
 
   function init() {
