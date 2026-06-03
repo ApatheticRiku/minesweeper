@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MINESWEEPER // retro edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230d1220'/%3E%3Ccircle cx='16' cy='17' r='7' fill='%2300e5ff'/%3E%3Cg stroke='%23ff2e88' stroke-width='2' stroke-linecap='round'%3E%3Cline x1='16' y1='6' x2='16' y2='12'/%3E%3Cline x1='5' y1='17' x2='11' y2='17'/%3E%3Cline x1='21' y1='17' x2='27' y2='17'/%3E%3Cline x1='8' y1='9' x2='12' y2='13'/%3E%3Cline x1='24' y1='9' x2='20' y2='13'/%3E%3C/g%3E%3Crect x='13' y='10' width='6' height='2' fill='%2300e5ff'/%3E%3C/svg%3E"
+  />
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="crt-flicker" aria-hidden="true"></div>
+
+  <main class="cabinet">
+    <div class="layout">
+      <div class="layout-main">
+        <header class="title-bar">
+          <h1 class="logo">
+            <span class="logo-mine">MINE</span><span class="logo-sweep">SWEEPER</span>
+          </h1>
+          <p class="tagline">// defuse the field · v1.0</p>
+        </header>
+
+        <section class="game-frame">
+          <div class="hud">
+            <div class="hud-cell" aria-label="Mines remaining">
+              <span class="hud-label">MINES</span>
+              <span class="hud-value" id="mine-count">000</span>
+            </div>
+
+            <button id="reset-btn" class="reset-btn" aria-label="Reset game" title="Reset">
+              <span class="face" id="face" aria-hidden="true">😊</span>
+            </button>
+
+            <div class="hud-cell" aria-label="Time elapsed">
+              <span class="hud-label" id="time-label">TIME</span>
+              <span class="hud-value" id="timer">000</span>
+            </div>
+          </div>
+
+          <div class="board-wrap">
+            <div id="board" class="board" role="grid" aria-label="Minesweeper board"></div>
+          </div>
+        </section>
+
+        <section class="controls">
+          <div class="control-group">
+            <span class="control-label">DIFFICULTY</span>
+            <div class="seg-control" role="tablist" aria-label="Difficulty">
+              <button class="seg-btn active" data-difficulty="beginner" role="tab" aria-selected="true">EASY</button>
+              <button class="seg-btn" data-difficulty="intermediate" role="tab" aria-selected="false">MED</button>
+              <button class="seg-btn" data-difficulty="expert" role="tab" aria-selected="false">HARD</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">MODE</span>
+            <label class="toggle">
+              <input type="checkbox" id="time-attack-toggle" />
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-text">
+                <span class="toggle-off">CLASSIC</span>
+                <span class="toggle-on">TIME ATTACK</span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="scores-panel">
+          <div class="scores-header">
+            <span class="scores-title">HIGH SCORES</span>
+            <button id="clear-scores" class="link-btn" title="Clear high scores">[CLEAR]</button>
+          </div>
+          <ul class="scores-list">
+            <li>
+              <span class="score-key">EASY</span>
+              <span class="score-value" data-score="beginner">--:--</span>
+            </li>
+            <li>
+              <span class="score-key">MED</span>
+              <span class="score-value" data-score="intermediate">--:--</span>
+            </li>
+            <li>
+              <span class="score-key">HARD</span>
+              <span class="score-value" data-score="expert">--:--</span>
+            </li>
+            <li class="score-attack">
+              <span class="score-key">ATTACK</span>
+              <span class="score-value" data-score="attack">--:--</span>
+            </li>
+          </ul>
+          <p class="scores-hint" id="new-record-msg"></p>
+        </section>
+      </div>
+
+      <aside class="sidebar" aria-label="About this build">
+        <div class="vibe-badge">
+          <span class="vibe-dot" aria-hidden="true"></span>
+          <span class="vibe-label">VIBECODED</span>
+        </div>
+
+        <h2 class="sidebar-title">THE PROMPT</h2>
+        <blockquote class="prompt-quote">
+          <p>
+            &ldquo;Build a simple web app for playing Minesweeper. Include high
+            score tracking, a reset button, and a time attack mode for beating
+            your best time. Use a modern, clean design, with retro vibes for
+            typefaces and graphics.&rdquo;
+          </p>
+        </blockquote>
+
+        <div class="vibe-meta">
+          <div class="meta-row">
+            <span class="meta-key">BUILT&nbsp;BY</span>
+            <span class="meta-val">a human &amp; an LLM</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">MODEL</span>
+            <span class="meta-val mono">minimax-m3:cloud</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">PLATFORM</span>
+            <span class="meta-val mono">Ollama Cloud</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">STACK</span>
+            <span class="meta-val mono">HTML · CSS · JS</span>
+          </div>
+        </div>
+
+        <p class="vibe-note">
+          No frameworks. No build step. Just vibes, neon, and a board full of mines.
+        </p>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <span>L-CLICK reveal · R-CLICK flag · F2 reset</span>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="game.js"></script>
+</body>
+</html>
